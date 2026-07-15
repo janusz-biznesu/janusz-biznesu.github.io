@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>$JANUSZ — Token Januszy Biznesu na TON</title>
+<meta name="description" content="JANUSZ ($janusz) — token januszy biznesu na sieci TON. A można taniej? Można. Faktura na firmę.">
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="apple-touch-icon" href="logo.png">
+<meta property="og:image" content="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#140f0a; --bg2:#1d1710; --card:#241d14;
+    --gold:#f6c445; --gold-2:#ffdd7a; --red:#e23c3c; --orange:#ff7a1a;
+    --cream:#f6efe2; --muted:#b7a888; --line:rgba(246,196,69,.18);
+    --shadow:0 20px 60px rgba(0,0,0,.45); --r:22px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:'Inter',system-ui,sans-serif;background:linear-gradient(180deg,var(--bg),#17110b 50%,var(--bg));color:var(--cream);overflow-x:hidden;line-height:1.6}
+  h1,h2,h3,.display{font-family:'Baloo 2',system-ui,sans-serif;line-height:1.05}
+  a{color:inherit;text-decoration:none}
+  .wrap{width:min(1150px,92vw);margin:0 auto}
+  .grad{background:linear-gradient(100deg,var(--orange),var(--gold) 35%,var(--gold-2) 55%,var(--red) 120%);background-size:220% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 7s linear infinite}
+  @keyframes shine{to{background-position:220% center}}
+
+  /* animated colour blobs */
+  .bg-blobs{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+  .bg-blobs i{position:absolute;width:44vw;height:44vw;border-radius:50%;filter:blur(80px);opacity:.16;animation:floatb 22s ease-in-out infinite}
+  .bg-blobs i:nth-child(1){background:var(--gold);top:-10%;left:-8%}
+  .bg-blobs i:nth-child(2){background:var(--red);top:35%;right:-12%;animation-delay:-6s}
+  .bg-blobs i:nth-child(3){background:var(--orange);bottom:-12%;left:20%;animation-delay:-12s}
+  .bg-blobs i:nth-child(4){background:var(--gold-2);top:60%;left:-10%;animation-delay:-3s;opacity:.12}
+  @keyframes floatb{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(8vw,6vh) scale(1.15)}66%{transform:translate(-6vw,-4vh) scale(.9)}}
+
+  .marquee{background:linear-gradient(90deg,var(--gold),var(--orange),var(--gold));color:#241a06;font-family:'Baloo 2';font-weight:800;padding:11px 0;overflow:hidden;white-space:nowrap;border-bottom:3px solid #241a06;position:relative;z-index:30}
+  .marquee span{display:inline-block;animation:slide 26s linear infinite;font-size:.95rem;letter-spacing:.3px}
+  .marquee span b{margin:0 26px}
+  @keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  nav{position:sticky;top:0;z-index:40;background:rgba(20,15,10,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+  .nav-in{display:flex;align-items:center;justify-content:space-between;padding:14px 0;gap:16px}
+  .logo{display:flex;align-items:center;gap:10px;font-family:'Baloo 2';font-weight:800;font-size:1.35rem}
+  .logo .badge{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-size:1.2rem;background:radial-gradient(circle at 30% 30%,var(--gold-2),var(--gold));box-shadow:0 6px 16px rgba(246,196,69,.4);animation:spin 9s linear infinite}
+  img.badge{object-fit:cover;background:none;animation:none}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .nav-links{display:flex;gap:22px;align-items:center;font-weight:600;font-size:.92rem}
+  .nav-links a{color:var(--muted);transition:.2s;position:relative}
+  .nav-links a:not(.btn)::after{content:"";position:absolute;left:0;bottom:-5px;width:0;height:2px;background:var(--gold);transition:width .25s}
+  .nav-links a:not(.btn):hover{color:var(--gold)}
+  .nav-links a:not(.btn):hover::after{width:100%}
+  .btn{display:inline-block;font-family:'Baloo 2';font-weight:800;cursor:pointer;border:none;padding:13px 26px;border-radius:999px;font-size:1rem;transition:transform .15s,box-shadow .2s;background:linear-gradient(100deg,var(--gold),var(--gold-2));color:#241a06;box-shadow:0 10px 26px rgba(246,196,69,.35);position:relative;overflow:hidden}
+  .btn::after{content:"";position:absolute;top:0;left:-80%;width:45%;height:100%;background:linear-gradient(120deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);animation:sweep 4s infinite}
+  @keyframes sweep{0%{left:-80%}55%,100%{left:140%}}
+  .btn:hover{transform:translateY(-2px) rotate(-1deg);box-shadow:0 16px 36px rgba(246,196,69,.55)}
+  .btn.ghost{background:transparent;color:var(--cream);border:2px solid var(--line);box-shadow:none}
+  .btn.ghost::after{display:none}
+  .btn.ghost:hover{border-color:var(--gold);color:var(--gold)}
+  .nav-right{display:flex;align-items:center;gap:14px}
+  .lang{display:flex;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:3px}
+  .lang button{background:none;border:none;color:var(--muted);font-family:'Baloo 2';font-weight:800;font-size:.85rem;padding:6px 12px;border-radius:999px;cursor:pointer;transition:.2s}
+  .lang button.active{background:linear-gradient(100deg,var(--gold),var(--orange));color:#241a06}
+  .burger{display:none;font-size:1.8rem;background:none;border:none;color:var(--gold);cursor:pointer}
+
+  .hero{position:relative;padding:70px 0 90px;text-align:center;overflow:hidden}
+  .hero::before{content:"";position:absolute;inset:0;z-index:0;background:radial-gradient(600px 420px at 50% -5%,rgba(246,196,69,.20),transparent 60%),radial-gradient(520px 420px at 85% 30%,rgba(226,60,60,.15),transparent 60%),radial-gradient(480px 400px at 12% 70%,rgba(255,122,26,.14),transparent 60%);animation:pulseGlow 8s ease-in-out infinite}
+  @keyframes pulseGlow{0%,100%{opacity:.75;transform:scale(1)}50%{opacity:1;transform:scale(1.06)}}
+  .hero .wrap{position:relative;z-index:2}
+  .kicker{display:inline-block;background:var(--card);border:1px solid var(--line);color:var(--gold);font-weight:700;font-size:.82rem;letter-spacing:1.5px;text-transform:uppercase;padding:8px 18px;border-radius:999px;margin-bottom:26px}
+  .mascot-wrap{position:relative;display:inline-block}
+  .mascot-wrap::before{content:"";position:absolute;inset:-20% -10%;background:radial-gradient(circle,rgba(246,196,69,.35),transparent 65%);filter:blur(20px);animation:pulseGlow 4s ease-in-out infinite;z-index:0}
+  .mascot{position:relative;z-index:1;font-size:clamp(80px,16vw,140px);line-height:1;animation:bob 3.5s ease-in-out infinite;filter:drop-shadow(0 12px 24px rgba(0,0,0,.5))}
+  img.mascot{width:clamp(170px,30vw,260px);height:auto;display:block;border-radius:28px;border:3px solid rgba(246,196,69,.55);box-shadow:0 14px 30px rgba(0,0,0,.55)}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-16px) rotate(2deg)}}
+  .hero h1{font-size:clamp(3rem,10vw,6.4rem);font-weight:800;margin:6px 0 4px;letter-spacing:-1px}
+  .hero .sub{font-size:clamp(1.05rem,2.6vw,1.4rem);color:var(--muted);max-width:660px;margin:14px auto 8px;font-weight:500}
+  .hero .sub b{color:var(--cream)}
+  .pills{display:flex;flex-direction:column;align-items:center;gap:12px;margin:26px 0 30px}
+  .info-pill{display:inline-flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:9px 12px 9px 20px;font-weight:600;max-width:92vw;transition:.2s}
+  .info-pill:hover{border-color:var(--gold)}
+  .info-pill code{font-family:'Baloo 2';color:var(--gold);font-size:1.02rem;letter-spacing:.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:52vw}
+  .copy{background:var(--gold);color:#241a06;border:none;border-radius:999px;padding:7px 15px;font-weight:800;cursor:pointer;font-family:'Baloo 2';transition:.2s;flex-shrink:0}
+  .copy:hover{background:var(--gold-2)}
+  .cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  .float{position:absolute;z-index:1;opacity:.85;font-size:2.4rem;animation:drift 9s ease-in-out infinite}
+  .float:nth-child(1){top:12%;left:8%}.float:nth-child(2){top:22%;right:9%;animation-delay:1.2s;font-size:2.9rem}
+  .float:nth-child(3){bottom:18%;left:13%;animation-delay:2.1s;font-size:2rem}.float:nth-child(4){bottom:24%;right:12%;animation-delay:.6s}
+  .float:nth-child(5){top:44%;left:3%;animation-delay:3s;font-size:1.8rem}.float:nth-child(6){top:50%;right:4%;animation-delay:1.8s;font-size:2.2rem}
+  @keyframes drift{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-22px) rotate(8deg)}}
+
+  section{padding:72px 0;position:relative}
+  .sec-head{text-align:center;margin-bottom:48px}
+  .sec-head .tag{color:var(--gold);font-weight:700;letter-spacing:2px;text-transform:uppercase;font-size:.8rem}
+  .sec-head h2{font-size:clamp(2rem,5vw,3.1rem);margin-top:10px}
+  .sec-head p{color:var(--muted);max-width:640px;margin:14px auto 0}
+
+  .about{background:rgba(29,23,16,.7);border-top:1px solid var(--line);border-bottom:1px solid var(--line);backdrop-filter:blur(4px)}
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:center}
+  .about-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:34px;box-shadow:var(--shadow);font-size:clamp(6rem,18vw,11rem);text-align:center;line-height:1;transition:transform .4s}
+  .about-card:hover{transform:rotate(-3deg) scale(1.03)}
+  .about-text .tag{color:var(--gold);font-weight:700;letter-spacing:2px;text-transform:uppercase;font-size:.8rem}
+  .about-text h3{font-size:2rem;margin:10px 0 14px}
+  .about-text p{color:var(--cream);margin-bottom:14px}
+  .about-text .quote{border-left:4px solid var(--gold);padding:10px 0 10px 18px;color:var(--gold-2);font-family:'Baloo 2';font-weight:700;font-size:1.15rem;font-style:italic}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:22px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:30px;transition:transform .25s,border-color .25s,box-shadow .25s}
+  .card:hover{transform:translateY(-8px);border-color:var(--gold);box-shadow:0 18px 40px rgba(246,196,69,.18)}
+  .card .ic{font-size:2.4rem;margin-bottom:14px}
+  .card .num{font-family:'Baloo 2';font-weight:800;font-size:2.1rem;color:var(--gold)}
+  .card .lbl{color:var(--muted);font-weight:600;margin-top:4px}
+  .card small{display:block;color:var(--muted);margin-top:10px;font-size:.85rem;line-height:1.4}
+
+  .alt{background:rgba(29,23,16,.7);border-top:1px solid var(--line);border-bottom:1px solid var(--line);backdrop-filter:blur(4px)}
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:22px;counter-reset:s}
+  .step{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:30px;position:relative;transition:transform .25s,border-color .25s}
+  .step:hover{transform:translateY(-6px);border-color:var(--gold)}
+  .step::before{counter-increment:s;content:counter(s);position:absolute;top:-16px;left:26px;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-family:'Baloo 2';font-weight:800;font-size:1.2rem;background:linear-gradient(100deg,var(--gold),var(--orange));color:#241a06;box-shadow:0 8px 18px rgba(246,196,69,.4)}
+  .step h3{margin:16px 0 8px;font-size:1.25rem}
+  .step p{color:var(--muted);font-size:.95rem}
+
+  /* MEME GALLERY */
+  .memes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+  .meme{position:relative;aspect-ratio:1/1;border-radius:var(--r);border:2px solid rgba(0,0,0,.35);overflow:hidden;display:grid;place-items:center;cursor:default;transition:transform .3s,box-shadow .3s}
+  .meme:hover{transform:translateY(-6px) rotate(1deg);box-shadow:0 20px 44px rgba(0,0,0,.5)}
+  .meme:nth-child(6n+1){background:linear-gradient(150deg,#f6c445,#ff7a1a)}
+  .meme:nth-child(6n+2){background:linear-gradient(150deg,#e23c3c,#7a1f1f)}
+  .meme:nth-child(6n+3){background:linear-gradient(150deg,#3a6ea5,#1d3a5f)}
+  .meme:nth-child(6n+4){background:linear-gradient(150deg,#4caf6d,#1f5f3a)}
+  .meme:nth-child(6n+5){background:linear-gradient(150deg,#a55ed6,#4b2470)}
+  .meme:nth-child(6n+6){background:linear-gradient(150deg,#ffdd7a,#c88a00)}
+  .meme .emoji{font-size:clamp(3.5rem,9vw,5.5rem);filter:drop-shadow(0 6px 12px rgba(0,0,0,.4));transition:transform .3s}
+  .meme:hover .emoji{transform:scale(1.15) rotate(-6deg)}
+  .meme .cap{position:absolute;left:0;right:0;bottom:0;padding:16px 12px 14px;font-family:'Anton','Baloo 2',sans-serif;text-transform:uppercase;color:#fff;text-align:center;font-size:1.05rem;line-height:1.15;letter-spacing:.5px;text-shadow:2px 2px 0 #000,-2px 2px 0 #000,2px -2px 0 #000,-2px -2px 0 #000,0 3px 6px rgba(0,0,0,.6);background:linear-gradient(0deg,rgba(0,0,0,.35),transparent)}
+  .meme .topcap{position:absolute;left:0;right:0;top:0;padding:14px 12px;font-family:'Anton',sans-serif;text-transform:uppercase;color:#fff;text-align:center;font-size:.95rem;letter-spacing:.5px;text-shadow:2px 2px 0 #000,-2px 2px 0 #000,2px -2px 0 #000,-2px -2px 0 #000}
+
+  /* JANUSZ DNIA */
+  .daily-box{max-width:760px;margin:0 auto;background:linear-gradient(135deg,var(--card),var(--bg2));border:2px solid var(--gold);border-radius:28px;padding:44px 34px;text-align:center;box-shadow:0 24px 60px rgba(246,196,69,.16);position:relative;overflow:hidden}
+  .daily-box::before{content:"🏆";position:absolute;font-size:14rem;opacity:.05;right:-20px;bottom:-40px;transform:rotate(-12deg)}
+  .daily-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(100deg,var(--gold),var(--orange));color:#241a06;font-family:'Baloo 2';font-weight:800;padding:8px 20px;border-radius:999px;font-size:.9rem;letter-spacing:1px;text-transform:uppercase;margin-bottom:20px;position:relative;z-index:1}
+  .daily-quote{position:relative;z-index:1;font-family:'Baloo 2';font-weight:700;font-size:clamp(1.3rem,3.6vw,2rem);color:var(--cream);min-height:2.4em;display:flex;align-items:center;justify-content:center;transition:opacity .25s,transform .25s}
+  .daily-quote.pop{opacity:0;transform:translateY(12px)}
+  .daily-quote .mk{color:var(--gold);font-size:1.6em;line-height:0;vertical-align:-.15em;margin:0 .1em}
+  .daily-btn{position:relative;z-index:1;margin-top:26px;font-family:'Baloo 2';font-weight:800;cursor:pointer;border:none;padding:15px 34px;border-radius:999px;font-size:1.08rem;background:linear-gradient(100deg,var(--gold),var(--orange));color:#241a06;box-shadow:0 12px 30px rgba(246,196,69,.4);transition:transform .15s,box-shadow .2s}
+  .daily-btn:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 16px 38px rgba(246,196,69,.55)}
+  .daily-btn:active{transform:scale(.97)}
+
+  .join{text-align:center}
+  .join-box{background:linear-gradient(135deg,var(--card),var(--bg2));border:1px solid var(--gold);border-radius:30px;padding:56px 32px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .join-box .big{font-size:clamp(2rem,6vw,3.4rem);margin-bottom:10px}
+  .join-box p{color:var(--muted);max-width:520px;margin:0 auto 28px}
+  .socials{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  .soc{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:14px 24px;font-weight:700;display:flex;gap:10px;align-items:center;transition:.2s;font-family:'Baloo 2';font-size:1.05rem}
+  .soc:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-3px) scale(1.04)}
+
+  footer{background:rgba(29,23,16,.85);border-top:1px solid var(--line);padding:48px 0 40px;text-align:center}
+  footer .logo{justify-content:center;margin-bottom:16px}
+  .disclaimer{color:var(--muted);font-size:.85rem;max-width:660px;margin:16px auto 0;line-height:1.7}
+  .disclaimer b{color:var(--gold)}
+  footer .cr{color:var(--muted);opacity:.6;margin-top:22px;font-size:.82rem}
+
+  .reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.in{opacity:1;transform:none}
+
+  @media(max-width:900px){
+    .nav-links{position:fixed;inset:0 0 auto 0;top:0;flex-direction:column;background:var(--bg2);padding:90px 30px 30px;gap:22px;transform:translateY(-110%);transition:transform .35s;height:100vh;font-size:1.25rem;overflow-y:auto}
+    .nav-links.open{transform:none}
+    .burger{display:block;z-index:60}
+    .about-grid{grid-template-columns:1fr;gap:28px}
+    .info-pill code{max-width:60vw}
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-blobs"><i></i><i></i><i></i><i></i></div>
+
+<div class="marquee"><span id="marquee"></span></div>
+
+<nav>
+  <div class="wrap nav-in">
+    <a href="#top" class="logo"><img class="badge" src="logo.png" alt="" width="38" height="38"> $JANUSZ</a>
+    <div class="nav-links" id="menu">
+      <a href="#o-januszu" data-i18n="nav_about">Kim jest Janusz</a>
+      <a href="#tokenomia" data-i18n="nav_tokenomics">Tokenomia</a>
+      <a href="#galeria" data-i18n="nav_gallery">Galeria</a>
+      <a href="#janusz-dnia" data-i18n="nav_daily">Janusz Dnia</a>
+      <a href="#jak-kupic" data-i18n="nav_buy">Jak kupić</a>
+      <a href="#januszplan" data-i18n="nav_roadmap">Januszplan</a>
+      <a href="#dolacz" class="btn" style="color:#241a06" data-i18n="nav_join">Dołącz</a>
+    </div>
+    <div class="nav-right">
+      <div class="lang" id="lang">
+        <button data-lang="pl" class="active">PL</button>
+        <button data-lang="en">EN</button>
+        <button data-lang="ru">RU</button>
+      </div>
+      <button class="burger" id="burger" aria-label="menu">☰</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="top">
+  <span class="float">💼</span><span class="float">🧾</span><span class="float">🩴</span>
+  <span class="float">🔥</span><span class="float">🚗</span><span class="float">🍺</span>
+  <div class="wrap">
+    <span class="kicker" data-i18n="hero_kicker">Pierwszy token januszy biznesu • sieć TON</span>
+    <div class="mascot-wrap"><img class="mascot" src="logo.png" alt="Logo $JANUSZ" width="1024" height="1024"></div>
+    <h1 class="grad">JANUSZ</h1>
+    <p class="sub" data-i18n="hero_sub"><b>Nie znam się, to się wypowiem.</b> Token dla każdego, kto kombinuje, kręci interes i wie, że <b>zawsze można taniej</b>. Grill odpalony, faktura wystawiona — wsiadamy do malucha i jedziemy na księżyc. 🌕</p>
+
+    <div class="pills">
+      <div class="info-pill">
+        Ticker: <code>$janusz</code>
+        <button class="copy" id="copyTicker" data-i18n="copy_btn">Kopiuj</button>
+      </div>
+      <div class="info-pill">
+        <span data-i18n="ca_label">Kontrakt:</span> <code id="caValue">TBA</code>
+        <button class="copy" id="copyCA" data-i18n="copy_btn">Kopiuj</button>
+      </div>
+    </div>
+
+    <div class="cta">
+      <a href="#jak-kupic" class="btn" data-i18n="cta_buy">🚀 Kup Janusza</a>
+      <a href="#o-januszu" class="btn ghost" data-i18n="cta_who">Kim on w ogóle jest?</a>
+    </div>
+  </div>
+</header>
+
+<!-- ABOUT -->
+<section class="about" id="o-januszu">
+  <div class="wrap about-grid">
+    <div class="about-card reveal">🧔‍♂️</div>
+    <div class="about-text reveal">
+      <span class="tag" data-i18n="about_tag">Kim jest Janusz</span>
+      <h3 data-i18n="about_h3">Legenda polskiego biznesu</h3>
+      <p data-i18n="about_p1">Janusz to nie osoba. Janusz to <b>stan ducha</b>. To wąsaty geniusz przedsiębiorczości, który księguje grilla jako koszt, jedzie na Zanzibar „służbowo" i na każdą cenę odpowiada świętym pytaniem naszych czasów.</p>
+      <div class="quote" data-i18n="about_quote">„A można taniej?"</div>
+      <p data-i18n="about_p2">Teraz Janusz wchodzi na blockchain. Bo skoro cały świat robi tokeny, to <b>Janusz też zrobi — i to lepiej, taniej i na fakturę.</b> 💼</p>
+    </div>
+  </div>
+</section>
+
+<!-- TOKENOMICS -->
+<section id="tokenomia">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="tag" data-i18n="tok_tag">Tokenomia po januszowemu</span>
+      <h2 data-i18n="tok_h2">Liczby, które <span class="grad">się zgadzają</span></h2>
+      <p data-i18n="tok_p">Wszystko policzone na kalkulatorze z Biedronki. Bez ściemy, bez ukrytych kosztów (no, może jedna faktura).</p>
+    </div>
+    <div class="grid">
+      <div class="card reveal"><div class="ic">💰</div><div class="num">1 000 000 000</div><div class="lbl" data-i18n="tok1_lbl">Total supply</div><small data-i18n="tok1_small">Miliard sztuk. Okrągła liczba, żeby Sebix ogarnął.</small></div>
+      <div class="card reveal"><div class="ic">🔥</div><div class="num">100%</div><div class="lbl" data-i18n="tok2_lbl">LP zablokowane / spalone</div><small data-i18n="tok2_small">Janusz nie robi rugów. Janusz robi interesy.</small></div>
+      <div class="card reveal"><div class="ic">🧾</div><div class="num">0/0</div><div class="lbl" data-i18n="tok3_lbl">Podatek buy / sell</div><small data-i18n="tok3_small">Zero taxa. Bo Janusz i tak nie płaci podatków.</small></div>
+      <div class="card reveal"><div class="ic">🤝</div><div class="num">Fair</div><div class="lbl" data-i18n="tok4_lbl">Launch przez launchpad</div><small data-i18n="tok4_small">Każdy Janusz startuje z tej samej linii. Bez preminta dla kolesi.</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- MEME GALLERY -->
+<section class="alt" id="galeria">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="tag" data-i18n="gal_tag">Święta januszowa</span>
+      <h2 data-i18n="gal_h2">Galeria <span class="grad">memów</span></h2>
+      <p data-i18n="gal_p">Zbiór świętości. Wydrukuj, opraw w ramkę, powieś nad grillem.</p>
+    </div>
+    <div class="memes" id="memeGrid"></div>
+  </div>
+</section>
+
+<!-- JANUSZ DNIA -->
+<section id="janusz-dnia">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="tag" data-i18n="daily_tag">Codzienna dawka</span>
+      <h2 data-i18n="daily_h2">Janusz <span class="grad">Dnia</span></h2>
+      <p data-i18n="daily_p">Każdego dnia jeden Janusz przechodzi do legendy. Kliknij i poznaj dzisiejszego bohatera.</p>
+    </div>
+    <div class="daily-box reveal">
+      <span class="daily-badge">🏆 <span data-i18n="daily_badge">Janusz Dnia</span></span>
+      <div class="daily-quote" id="dailyQuote"></div>
+      <button class="daily-btn" id="dailyBtn" data-i18n="daily_btn">🎲 Losuj Janusza Dnia</button>
+    </div>
+  </div>
+</section>
+
+<!-- HOW TO BUY -->
+<section class="alt" id="jak-kupic">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="tag" data-i18n="buy_tag">Instrukcja obsługi</span>
+      <h2 data-i18n="buy_h2">Jak zostać <span class="grad">Januszem</span></h2>
+      <p data-i18n="buy_p">Cztery kroki. Prościej niż złożyć grilla z Castoramy.</p>
+    </div>
+    <div class="steps">
+      <div class="step reveal"><h3 data-i18n="step1_h">Portfel TON</h3><p data-i18n="step1_p">Zainstaluj portfel (np. Tonkeeper albo @wallet w Telegramie). Wpisz seed do zeszytu w kratkę i schowaj za szafką.</p></div>
+      <div class="step reveal"><h3 data-i18n="step2_h">Kup TON-a</h3><p data-i18n="step2_p">Wrzuć trochę TON-a do portfela. Nie ostatnie, Grażyna się dowie.</p></div>
+      <div class="step reveal"><h3 data-i18n="step3_h">Wejdź na DEX</h3><p data-i18n="step3_p">Otwórz ston.fi lub DeDust, wklej adres kontraktu $JANUSZ i podłącz portfel.</p></div>
+      <div class="step reveal"><h3 data-i18n="step4_h">Swap na $JANUSZ</h3><p data-i18n="step4_p">Zamień TON na Janusza, kliknij „Confirm" i witaj w rodzinie. Grill już się grzeje. 🔥</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section id="januszplan">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="tag" data-i18n="road_tag">Roadmapa</span>
+      <h2 data-i18n="road_h2">Januszplan <span class="grad">5-letni</span></h2>
+      <p data-i18n="road_p">Plan biznesowy zapisany na serwetce podczas grilla. Realny do bólu.</p>
+    </div>
+    <div class="road" style="display:grid;gap:20px;max-width:760px;margin:0 auto">
+      <div class="phase reveal" style="display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:start;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:26px 28px"><div class="em" style="font-size:2.6rem">🔥</div><div><h3 style="font-size:1.3rem;margin-bottom:6px"><span data-i18n="ph1_l" style="color:var(--gold);font-size:.9rem;display:block;font-family:'Inter';font-weight:700;letter-spacing:1px;text-transform:uppercase">Faza 1</span><span data-i18n="ph1_t">Rozkładamy grilla</span></h3><p data-i18n="ph1_p" style="color:var(--muted)">Launch tokena, strona, ekipa na Telegramie. Pierwsze memy, pierwsze „a można taniej" pod postami.</p></div></div>
+      <div class="phase reveal" style="display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:start;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:26px 28px"><div class="em" style="font-size:2.6rem">🧾</div><div><h3 style="font-size:1.3rem;margin-bottom:6px"><span data-i18n="ph2_l" style="color:var(--gold);font-size:.9rem;display:block;font-family:'Inter';font-weight:700;letter-spacing:1px;text-transform:uppercase">Faza 2</span><span data-i18n="ph2_t">Faktura na firmę</span></h3><p data-i18n="ph2_p" style="color:var(--muted)">Rośnie community, codzienny „Janusz Dnia", ranking najlepszych januszowych akcji. Budujemy plemię.</p></div></div>
+      <div class="phase reveal" style="display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:start;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:26px 28px"><div class="em" style="font-size:2.6rem">🩴</div><div><h3 style="font-size:1.3rem;margin-bottom:6px"><span data-i18n="ph3_l" style="color:var(--gold);font-size:.9rem;display:block;font-family:'Inter';font-weight:700;letter-spacing:1px;text-transform:uppercase">Faza 3</span><span data-i18n="ph3_t">Wczasy all-inclusive</span></h3><p data-i18n="ph3_p" style="color:var(--muted)">Listingi, partnerstwa, więcej oczu na Januszu. Skarpety w sandałach zakładane oficjalnie.</p></div></div>
+      <div class="phase reveal" style="display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:start;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:26px 28px"><div class="em" style="font-size:2.6rem">🚀</div><div><h3 style="font-size:1.3rem;margin-bottom:6px"><span data-i18n="ph4_l" style="color:var(--gold);font-size:.9rem;display:block;font-family:'Inter';font-weight:700;letter-spacing:1px;text-transform:uppercase">Faza 4</span><span data-i18n="ph4_t">Interes życia</span></h3><p data-i18n="ph4_p" style="color:var(--muted)">Katalog januszowych firm, zniżki dla holderów, drobne narzędzia. Mem, który robi coś więcej niż mem.</p></div></div>
+      <div class="phase reveal" style="display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:start;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:26px 28px"><div class="em" style="font-size:2.6rem">🌕</div><div><h3 style="font-size:1.3rem;margin-bottom:6px"><span data-i18n="ph5_l" style="color:var(--gold);font-size:.9rem;display:block;font-family:'Inter';font-weight:700;letter-spacing:1px;text-transform:uppercase">Faza 5</span><span data-i18n="ph5_t">Maluchem na księżyc</span></h3><p data-i18n="ph5_p" style="color:var(--muted)">To już zależy od Was, Janusze. My swoje zrobiliśmy — grill był, faktura poszła.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- JOIN -->
+<section class="join" id="dolacz">
+  <div class="wrap">
+    <div class="join-box reveal">
+      <h2 class="big grad" data-i18n="join_h2">Wsiadaj do malucha 🚗</h2>
+      <p data-i18n="join_p">Najlepsze interesy robi się w ekipie. Dołącz do Januszy, wrzucaj memy, kombinuj razem z nami. Miejsca jeszcze są (na tylnej kanapie).</p>
+      <div class="socials">
+        <a href="#" id="tgLink" class="soc" target="_blank" rel="noopener">✈️ Telegram</a>
+        <a href="#" id="xLink" class="soc" target="_blank" rel="noopener">🐦 X / Twitter</a>
+        <a href="#" id="dexLink" class="soc" target="_blank" rel="noopener">📊 DexScreener</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="logo"><img class="badge" src="logo.png" alt="" width="38" height="38"> $JANUSZ</div>
+    <p class="disclaimer" data-i18n="foot_disc"><b>Uwaga, drogi Januszu:</b> $JANUSZ to token memowy stworzony dla zabawy i społeczności. Nie jest to porada finansowa, inwestycyjna ani obietnica zysku. Kryptowaluty są ryzykowne — możesz stracić wszystko, łącznie z kasą na grilla. Nie inwestuj więcej, niż jesteś gotów przepuścić na „interes życia". <b>DYOR.</b></p>
+    <p class="cr" data-i18n="foot_cr">© 2026 Janusz Biznesu. Zbudowane na TON. Grill wliczony w koszty.</p>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   ⬇⬇⬇  EDYTUJ TYLKO TE 4 LINIE PO LAUNCHU  ⬇⬇⬇
+   ============================================================ */
+const CONTRACT_ADDRESS = "";                            // <-- wklej adres $JANUSZ po launchu (zostaw "" = pokaże TBA)
+const TELEGRAM_URL     = "https://t.me/";               // <-- wklej link do grupy TG
+const TWITTER_URL      = "https://x.com/";              // <-- wklej link do X
+const DEX_URL          = "https://dexscreener.com/ton"; // <-- link do DexScreener
+/* ============================================================ */
+
+const I18N = {
+  pl:{
+    nav_about:`Kim jest Janusz`, nav_tokenomics:`Tokenomia`, nav_gallery:`Galeria`, nav_daily:`Janusz Dnia`, nav_buy:`Jak kupić`, nav_roadmap:`Januszplan`, nav_join:`Dołącz`,
+    marquee:`<b>💼 A MOŻNA TANIEJ?</b><b>🧾 FAKTURA NA FIRMĘ</b><b>🩴 SKARPETY W SANDAŁACH</b><b>🔥 GRILL ODPALONY</b><b>🚗 MALUCH DO KSIĘGI</b><b>📈 INTERES ŻYCIA</b><b>🍺 ZAŁATWIONE</b>`,
+    hero_kicker:`Pierwszy token januszy biznesu • sieć TON`,
+    hero_sub:`<b>Nie znam się, to się wypowiem.</b> Token dla każdego, kto kombinuje, kręci interes i wie, że <b>zawsze można taniej</b>. Grill odpalony, faktura wystawiona — wsiadamy do malucha i jedziemy na księżyc. 🌕`,
+    copy_btn:`Kopiuj`, ca_label:`Kontrakt:`, ca_tba:`TBA — po launchu`,
+    cta_buy:`🚀 Kup Janusza`, cta_who:`Kim on w ogóle jest?`,
+    about_tag:`Kim jest Janusz`, about_h3:`Legenda polskiego biznesu`,
+    about_p1:`Janusz to nie osoba. Janusz to <b>stan ducha</b>. To wąsaty geniusz przedsiębiorczości, który księguje grilla jako koszt, jedzie na Zanzibar „służbowo" i na każdą cenę odpowiada świętym pytaniem naszych czasów.`,
+    about_quote:`„A można taniej?"`,
+    about_p2:`Teraz Janusz wchodzi na blockchain. Bo skoro cały świat robi tokeny, to <b>Janusz też zrobi — i to lepiej, taniej i na fakturę.</b> 💼`,
+    tok_tag:`Tokenomia po januszowemu`, tok_h2:`Liczby, które <span class="grad">się zgadzają</span>`,
+    tok_p:`Wszystko policzone na kalkulatorze z Biedronki. Bez ściemy, bez ukrytych kosztów (no, może jedna faktura).`,
+    tok1_lbl:`Total supply`, tok1_small:`Miliard sztuk. Okrągła liczba, żeby Sebix ogarnął.`,
+    tok2_lbl:`LP zablokowane / spalone`, tok2_small:`Janusz nie robi rugów. Janusz robi interesy.`,
+    tok3_lbl:`Podatek buy / sell`, tok3_small:`Zero taxa. Bo Janusz i tak nie płaci podatków.`,
+    tok4_lbl:`Launch przez launchpad`, tok4_small:`Każdy Janusz startuje z tej samej linii. Bez preminta dla kolesi.`,
+    gal_tag:`Święta januszowa`, gal_h2:`Galeria <span class="grad">memów</span>`, gal_p:`Zbiór świętości. Wydrukuj, opraw w ramkę, powieś nad grillem.`,
+    memes:[
+      {e:`🩴`, cap:`Skarpety w sandałach = klimatyzacja stóp`},
+      {e:`🧾`, cap:`Poproszę na firmę`},
+      {e:`🔥`, cap:`Grill w środę? A czemu nie`},
+      {e:`🚗`, cap:`Maluch to nie auto, to filozofia`},
+      {e:`💶`, cap:`A można taniej?`},
+      {e:`🏖️`, cap:`Zanzibar. Służbowo.`}
+    ],
+    daily_tag:`Codzienna dawka`, daily_h2:`Janusz <span class="grad">Dnia</span>`,
+    daily_p:`Każdego dnia jeden Janusz przechodzi do legendy. Kliknij i poznaj dzisiejszego bohatera.`,
+    daily_badge:`Janusz Dnia`, daily_btn:`🎲 Losuj Janusza Dnia`, daily_hint:`Kliknij „Losuj", żeby poznać dzisiejszego Janusza.`,
+    daily:[
+      `Kupił 3 telewizory na raty, bo była promocja.`,
+      `Zaparkował na kopercie, „bo tylko na chwilę".`,
+      `Wystawił fakturę za grilla jako „spotkanie biznesowe".`,
+      `Reklamował buty po roku, bo „się zużyły".`,
+      `Wymienił opony w garażu, bo w warsztacie za drogo.`,
+      `Zapłacił gotówką, żeby było taniej.`,
+      `Poleciał na Zanzibar i odliczył od podatku jako delegację.`,
+      `Zwrócił wiertarkę po wywierceniu wszystkich dziur.`
+    ],
+    buy_tag:`Instrukcja obsługi`, buy_h2:`Jak zostać <span class="grad">Januszem</span>`, buy_p:`Cztery kroki. Prościej niż złożyć grilla z Castoramy.`,
+    step1_h:`Portfel TON`, step1_p:`Zainstaluj portfel (np. Tonkeeper albo @wallet w Telegramie). Wpisz seed do zeszytu w kratkę i schowaj za szafką.`,
+    step2_h:`Kup TON-a`, step2_p:`Wrzuć trochę TON-a do portfela. Nie ostatnie, Grażyna się dowie.`,
+    step3_h:`Wejdź na DEX`, step3_p:`Otwórz ston.fi lub DeDust, wklej adres kontraktu $JANUSZ i podłącz portfel.`,
+    step4_h:`Swap na $JANUSZ`, step4_p:`Zamień TON na Janusza, kliknij „Confirm" i witaj w rodzinie. Grill już się grzeje. 🔥`,
+    road_tag:`Roadmapa`, road_h2:`Januszplan <span class="grad">5-letni</span>`, road_p:`Plan biznesowy zapisany na serwetce podczas grilla. Realny do bólu.`,
+    ph1_l:`Faza 1`, ph1_t:`Rozkładamy grilla`, ph1_p:`Launch tokena, strona, ekipa na Telegramie. Pierwsze memy, pierwsze „a można taniej" pod postami.`,
+    ph2_l:`Faza 2`, ph2_t:`Faktura na firmę`, ph2_p:`Rośnie community, codzienny „Janusz Dnia", ranking najlepszych januszowych akcji. Budujemy plemię.`,
+    ph3_l:`Faza 3`, ph3_t:`Wczasy all-inclusive`, ph3_p:`Listingi, partnerstwa, więcej oczu na Januszu. Skarpety w sandałach zakładane oficjalnie.`,
+    ph4_l:`Faza 4`, ph4_t:`Interes życia`, ph4_p:`Katalog januszowych firm, zniżki dla holderów, drobne narzędzia. Mem, który robi coś więcej niż mem.`,
+    ph5_l:`Faza 5`, ph5_t:`Maluchem na księżyc`, ph5_p:`To już zależy od Was, Janusze. My swoje zrobiliśmy — grill był, faktura poszła.`,
+    join_h2:`Wsiadaj do malucha 🚗`, join_p:`Najlepsze interesy robi się w ekipie. Dołącz do Januszy, wrzucaj memy, kombinuj razem z nami. Miejsca jeszcze są (na tylnej kanapie).`,
+    foot_disc:`<b>Uwaga, drogi Januszu:</b> $JANUSZ to token memowy stworzony dla zabawy i społeczności. Nie jest to porada finansowa, inwestycyjna ani obietnica zysku. Kryptowaluty są ryzykowne — możesz stracić wszystko, łącznie z kasą na grilla. Nie inwestuj więcej, niż jesteś gotów przepuścić na „interes życia". <b>DYOR.</b>`,
+    foot_cr:`© 2026 Janusz Biznesu. Zbudowane na TON. Grill wliczony w koszty.`
+  },
+  en:{
+    nav_about:`Who is Janusz`, nav_tokenomics:`Tokenomics`, nav_gallery:`Gallery`, nav_daily:`Janusz of the Day`, nav_buy:`How to buy`, nav_roadmap:`Roadmap`, nav_join:`Join`,
+    marquee:`<b>💼 CAN IT BE CHEAPER?</b><b>🧾 PUT IT ON THE COMPANY</b><b>🩴 SOCKS IN SANDALS</b><b>🔥 GRILL IS ON</b><b>🚗 FIAT ON THE BOOKS</b><b>📈 DEAL OF A LIFETIME</b><b>🍺 SORTED</b>`,
+    hero_kicker:`The first token for business Januszes • TON network`,
+    hero_sub:`<b>No clue, but I'll share my opinion.</b> A token for everyone who wheels, deals and knows it can <b>always be cheaper</b>. Grill's on, invoice is out — we hop in the tiny Fiat and drive to the moon. 🌕`,
+    copy_btn:`Copy`, ca_label:`Contract:`, ca_tba:`TBA — after launch`,
+    cta_buy:`🚀 Buy Janusz`, cta_who:`Who even is he?`,
+    about_tag:`Who is Janusz`, about_h3:`A living business legend`,
+    about_p1:`Janusz isn't a person. Janusz is a <b>state of mind</b>. A moustached genius of entrepreneurship who writes off the BBQ as a business cost, flies to Zanzibar "on business" and answers every price with the sacred question of our times.`,
+    about_quote:`"Can it be cheaper?"`,
+    about_p2:`Now Janusz enters the blockchain. If the whole world is launching tokens, then <b>Janusz will too — better, cheaper and on an invoice.</b> 💼`,
+    tok_tag:`Janusz-style tokenomics`, tok_h2:`Numbers that <span class="grad">add up</span>`,
+    tok_p:`All counted on a calculator from the discount store. No BS, no hidden fees (well, maybe one invoice).`,
+    tok1_lbl:`Total supply`, tok1_small:`A billion. A round number so even the cousin gets it.`,
+    tok2_lbl:`LP locked / burned`, tok2_small:`Janusz doesn't do rugs. Janusz does business.`,
+    tok3_lbl:`Buy / sell tax`, tok3_small:`Zero tax. Because Janusz doesn't pay taxes anyway.`,
+    tok4_lbl:`Fair launchpad launch`, tok4_small:`Every Janusz starts from the same line. No premint for buddies.`,
+    gal_tag:`Sacred relics`, gal_h2:`Meme <span class="grad">gallery</span>`, gal_p:`A collection of holy artifacts. Print, frame, hang it above the grill.`,
+    memes:[
+      {e:`🩴`, cap:`Socks in sandals = foot air-conditioning`},
+      {e:`🧾`, cap:`Put it on the company, please`},
+      {e:`🔥`, cap:`Grilling on a Wednesday? Why not`},
+      {e:`🚗`, cap:`The tiny Fiat isn't a car, it's a philosophy`},
+      {e:`💶`, cap:`Can it be cheaper?`},
+      {e:`🏖️`, cap:`Zanzibar. On business.`}
+    ],
+    daily_tag:`Daily dose`, daily_h2:`Janusz of the <span class="grad">Day</span>`,
+    daily_p:`Every day one Janusz becomes a legend. Click and meet today's hero.`,
+    daily_badge:`Janusz of the Day`, daily_btn:`🎲 Draw the Janusz of the Day`, daily_hint:`Hit "Draw" to meet today's Janusz.`,
+    daily:[
+      `Bought 3 TVs on installments because there was a sale.`,
+      `Parked in the disabled spot, "just for a second".`,
+      `Expensed the BBQ as a "business meeting".`,
+      `Returned shoes after a year because they "wore out".`,
+      `Changed his tyres in the garage — the shop was too pricey.`,
+      `Paid cash to get it cheaper.`,
+      `Flew to Zanzibar and wrote it off as a business trip.`,
+      `Returned the drill after drilling every hole he needed.`
+    ],
+    buy_tag:`User manual`, buy_h2:`How to become a <span class="grad">Janusz</span>`, buy_p:`Four steps. Easier than assembling a BBQ from the hardware store.`,
+    step1_h:`TON wallet`, step1_p:`Install a wallet (e.g. Tonkeeper or @wallet in Telegram). Write the seed phrase in a notebook and hide it behind the cupboard.`,
+    step2_h:`Buy some TON`, step2_p:`Top up your wallet with some TON. Not your last cash — the wife will find out.`,
+    step3_h:`Open a DEX`, step3_p:`Open ston.fi or DeDust, paste the $JANUSZ contract address and connect your wallet.`,
+    step4_h:`Swap to $JANUSZ`, step4_p:`Swap TON for Janusz, hit "Confirm" and welcome to the family. The grill is already warming up. 🔥`,
+    road_tag:`Roadmap`, road_h2:`The 5-year <span class="grad">Januszplan</span>`, road_p:`A business plan scribbled on a napkin during a BBQ. Painfully realistic.`,
+    ph1_l:`Phase 1`, ph1_t:`Firing up the grill`, ph1_p:`Token launch, website, crew on Telegram. First memes, first "can it be cheaper" under the posts.`,
+    ph2_l:`Phase 2`, ph2_t:`Put it on the company`, ph2_p:`Community grows, daily "Janusz of the Day", ranking of the best Janusz moves. We build the tribe.`,
+    ph3_l:`Phase 3`, ph3_t:`All-inclusive holiday`, ph3_p:`Listings, partnerships, more eyes on Janusz. Socks in sandals now official.`,
+    ph4_l:`Phase 4`, ph4_t:`Deal of a lifetime`, ph4_p:`A directory of Janusz businesses, holder discounts, small tools. A meme that does more than meme.`,
+    ph5_l:`Phase 5`, ph5_t:`To the moon in a tiny Fiat`, ph5_p:`That's up to you now, Januszes. We did our part — the BBQ happened, the invoice went out.`,
+    join_h2:`Hop in the tiny Fiat 🚗`, join_p:`The best deals are made as a crew. Join the Januszes, post memes, scheme with us. There's still room (on the back seat).`,
+    foot_disc:`<b>Heads up, dear Janusz:</b> $JANUSZ is a meme token made for fun and community. This is not financial or investment advice, nor a promise of profit. Crypto is risky — you can lose everything, including the BBQ money. Don't invest more than you're willing to blow on the "deal of a lifetime". <b>DYOR.</b>`,
+    foot_cr:`© 2026 Janusz Biznesu. Built on TON. BBQ included in the costs.`
+  },
+  ru:{
+    nav_about:`Кто такой Януш`, nav_tokenomics:`Токеномика`, nav_gallery:`Галерея`, nav_daily:`Януш дня`, nav_buy:`Как купить`, nav_roadmap:`Дорожная карта`, nav_join:`В команду`,
+    marquee:`<b>💼 А ПОДЕШЕВЛЕ МОЖНО?</b><b>🧾 ОФОРМИМ НА ФИРМУ</b><b>🩴 НОСКИ В САНДАЛИЯХ</b><b>🔥 МАНГАЛ ГОРИТ</b><b>🚗 «КОПЕЙКА» В РАСХОДЫ</b><b>📈 СДЕЛКА ВЕКА</b><b>🍺 ВСЁ СХВАЧЕНО</b>`,
+    hero_kicker:`Первый токен бизнес-Янушей • сеть TON`,
+    hero_sub:`<b>Не разбираюсь, но выскажусь.</b> Токен для всех, кто крутит бизнес и знает, что <b>всегда можно подешевле</b>. Мангал горит, счёт выставлен — садимся в «копейку» и едем на луну. 🌕`,
+    copy_btn:`Копир.`, ca_label:`Контракт:`, ca_tba:`TBA — после запуска`,
+    cta_buy:`🚀 Купить Януша`, cta_who:`Кто он вообще?`,
+    about_tag:`Кто такой Януш`, about_h3:`Легенда бизнеса`,
+    about_p1:`Януш — это не человек. Януш — это <b>состояние души</b>. Усатый гений предпринимательства, который списывает мангал в расходы, летит на Занзибар «по работе» и на любую цену отвечает священным вопросом нашего времени.`,
+    about_quote:`«А подешевле можно?»`,
+    about_p2:`Теперь Януш выходит в блокчейн. Раз весь мир делает токены, то <b>Януш тоже сделает — лучше, дешевле и по счёту.</b> 💼`,
+    tok_tag:`Токеномика по-янушевски`, tok_h2:`Цифры, которые <span class="grad">сходятся</span>`,
+    tok_p:`Всё посчитано на калькуляторе из супермаркета. Без обмана, без скрытых комиссий (ну, может, один счёт).`,
+    tok1_lbl:`Всего токенов`, tok1_small:`Миллиард штук. Круглое число, чтобы племянник понял.`,
+    tok2_lbl:`LP заблокирован / сожжён`, tok2_small:`Януш не делает рагпулы. Януш делает бизнес.`,
+    tok3_lbl:`Налог buy / sell`, tok3_small:`Ноль налога. Януш налоги всё равно не платит.`,
+    tok4_lbl:`Честный запуск`, tok4_small:`Каждый Януш стартует с одной линии. Без преминта для своих.`,
+    gal_tag:`Святыни`, gal_h2:`Галерея <span class="grad">мемов</span>`, gal_p:`Коллекция святынь. Распечатай, вставь в рамку, повесь над мангалом.`,
+    memes:[
+      {e:`🩴`, cap:`Носки в сандалиях = кондиционер для ног`},
+      {e:`🧾`, cap:`Оформите на фирму, пожалуйста`},
+      {e:`🔥`, cap:`Шашлык в среду? А почему нет`},
+      {e:`🚗`, cap:`«Копейка» — не машина, а философия`},
+      {e:`💶`, cap:`А подешевле можно?`},
+      {e:`🏖️`, cap:`Занзибар. По работе.`}
+    ],
+    daily_tag:`Ежедневная доза`, daily_h2:`Януш <span class="grad">дня</span>`,
+    daily_p:`Каждый день один Януш становится легендой. Жми и узнай сегодняшнего героя.`,
+    daily_badge:`Януш дня`, daily_btn:`🎲 Выбрать Януша дня`, daily_hint:`Нажми «Выбрать», чтобы узнать сегодняшнего Януша.`,
+    daily:[
+      `Купил 3 телевизора в рассрочку, потому что была акция.`,
+      `Припарковался на месте для инвалидов, «на секундочку».`,
+      `Списал мангал как «деловую встречу».`,
+      `Вернул ботинки через год, потому что они «износились».`,
+      `Поменял резину в гараже — в сервисе дорого.`,
+      `Заплатил наличкой, чтобы вышло дешевле.`,
+      `Слетал на Занзибар и списал как командировку.`,
+      `Вернул дрель, просверлив все нужные дырки.`
+    ],
+    buy_tag:`Инструкция`, buy_h2:`Как стать <span class="grad">Янушем</span>`, buy_p:`Четыре шага. Проще, чем собрать мангал из магазина.`,
+    step1_h:`Кошелёк TON`, step1_p:`Установи кошелёк (Tonkeeper или @wallet в Telegram). Запиши seed-фразу в тетрадь в клетку и спрячь за шкаф.`,
+    step2_h:`Купи TON`, step2_p:`Закинь немного TON в кошелёк. Не последнее — жена узнает.`,
+    step3_h:`Зайди на DEX`, step3_p:`Открой ston.fi или DeDust, вставь адрес контракта $JANUSZ и подключи кошелёк.`,
+    step4_h:`Обменяй на $JANUSZ`, step4_p:`Обменяй TON на Януша, жми «Confirm» и добро пожаловать в семью. Мангал уже греется. 🔥`,
+    road_tag:`Дорожная карта`, road_h2:`<span class="grad">Пятилетка</span> Януша`, road_p:`Бизнес-план, записанный на салфетке во время шашлыка. Реалистичный до боли.`,
+    ph1_l:`Фаза 1`, ph1_t:`Разжигаем мангал`, ph1_p:`Запуск токена, сайт, команда в Telegram. Первые мемы, первое «а подешевле можно» под постами.`,
+    ph2_l:`Фаза 2`, ph2_t:`Оформляем на фирму`, ph2_p:`Растёт сообщество, ежедневный «Януш дня», рейтинг лучших янушевских ходов. Строим племя.`,
+    ph3_l:`Фаза 3`, ph3_t:`Отпуск all-inclusive`, ph3_p:`Листинги, партнёрства, больше глаз на Януше. Носки в сандалиях — теперь официально.`,
+    ph4_l:`Фаза 4`, ph4_t:`Сделка века`, ph4_p:`Каталог янушевских фирм, скидки холдерам, небольшие инструменты. Мем, который больше, чем мем.`,
+    ph5_l:`Фаза 5`, ph5_t:`На «копейке» до луны`, ph5_p:`Это уже зависит от вас, Януши. Мы своё сделали — шашлык был, счёт ушёл.`,
+    join_h2:`Садись в «копейку» 🚗`, join_p:`Лучшие сделки делаются командой. Присоединяйся к Янушам, кидай мемы, крути дела с нами. Места ещё есть (на заднем сиденье).`,
+    foot_disc:`<b>Внимание, дорогой Януш:</b> $JANUSZ — мем-токен, созданный для веселья и сообщества. Это не финансовый или инвестиционный совет и не обещание прибыли. Крипта рискованна — можно потерять всё, включая деньги на шашлык. Не вкладывай больше, чем готов спустить на «сделку века». <b>DYOR.</b>`,
+    foot_cr:`© 2026 Janusz Biznesu. Построено на TON. Мангал включён в расходы.`
+  }
+};
+
+const marqueeSpan = document.getElementById('marquee');
+const caValue = document.getElementById('caValue');
+const memeGrid = document.getElementById('memeGrid');
+const dailyQuote = document.getElementById('dailyQuote');
+let currentLang = localStorage.getItem('janusz_lang') || 'pl';
+let lastDaily = -1;
+
+function renderMemes(l){
+  memeGrid.innerHTML = I18N[l].memes.map(m=>`<div class="meme"><span class="emoji">${m.e}</span><div class="cap">${m.cap}</div></div>`).join('');
+}
+function drawDaily(){
+  const arr = I18N[currentLang].daily;
+  let i; do{ i = Math.floor(Math.random()*arr.length); } while(arr.length>1 && i===lastDaily);
+  lastDaily = i;
+  dailyQuote.classList.add('pop');
+  setTimeout(()=>{ dailyQuote.innerHTML = `<span class="mk">„</span>${arr[i]}<span class="mk">"</span>`; dailyQuote.classList.remove('pop'); },200);
+}
+
+function setLang(l){
+  currentLang = l;
+  document.documentElement.lang = l;
+  const t = I18N[l];
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k = el.getAttribute('data-i18n');
+    if(t[k] != null && typeof t[k]==='string') el.innerHTML = t[k];
+  });
+  marqueeSpan.innerHTML = t.marquee + t.marquee;
+  caValue.textContent = CONTRACT_ADDRESS && CONTRACT_ADDRESS.trim() ? CONTRACT_ADDRESS.trim() : t.ca_tba;
+  renderMemes(l);
+  dailyQuote.innerHTML = t.daily_hint;
+  lastDaily = -1;
+  document.querySelectorAll('#lang button').forEach(b=>b.classList.toggle('active', b.dataset.lang===l));
+  localStorage.setItem('janusz_lang', l);
+}
+
+document.getElementById('tgLink').href  = TELEGRAM_URL;
+document.getElementById('xLink').href   = TWITTER_URL;
+document.getElementById('dexLink').href = DEX_URL;
+
+document.querySelectorAll('#lang button').forEach(b=>b.addEventListener('click',()=>setLang(b.dataset.lang)));
+document.getElementById('dailyBtn').addEventListener('click', drawDaily);
+
+const burger=document.getElementById('burger'), menu=document.getElementById('menu');
+burger.addEventListener('click',()=>{menu.classList.toggle('open');burger.textContent=menu.classList.contains('open')?'✕':'☰'});
+menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{menu.classList.remove('open');burger.textContent='☰'}));
+
+function bindCopy(btn, getText){
+  btn.addEventListener('click',()=>{
+    navigator.clipboard.writeText(getText()).then(()=>{
+      btn.textContent='✅'; setTimeout(()=>btn.innerHTML=I18N[currentLang].copy_btn,1400);
+    }).catch(()=>{});
+  });
+}
+bindCopy(document.getElementById('copyTicker'), ()=> '$janusz');
+bindCopy(document.getElementById('copyCA'), ()=> (CONTRACT_ADDRESS && CONTRACT_ADDRESS.trim()) ? CONTRACT_ADDRESS.trim() : 'TBA');
+
+const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.15});
+document.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transitionDelay=(i%4*70)+'ms';io.observe(el)});
+
+setLang(currentLang);
+</script>
+</body>
+</html>
