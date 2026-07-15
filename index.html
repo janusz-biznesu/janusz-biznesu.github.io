@@ -136,6 +136,9 @@
   .meme:hover .emoji{transform:scale(1.15) rotate(-6deg)}
   .meme .cap{position:absolute;left:0;right:0;bottom:0;padding:16px 12px 14px;font-family:'Anton','Baloo 2',sans-serif;text-transform:uppercase;color:#fff;text-align:center;font-size:1.05rem;line-height:1.15;letter-spacing:.5px;text-shadow:2px 2px 0 #000,-2px 2px 0 #000,2px -2px 0 #000,-2px -2px 0 #000,0 3px 6px rgba(0,0,0,.6);background:linear-gradient(0deg,rgba(0,0,0,.35),transparent)}
   .meme .topcap{position:absolute;left:0;right:0;top:0;padding:14px 12px;font-family:'Anton',sans-serif;text-transform:uppercase;color:#fff;text-align:center;font-size:.95rem;letter-spacing:.5px;text-shadow:2px 2px 0 #000,-2px 2px 0 #000,2px -2px 0 #000,-2px -2px 0 #000}
+  .meme-img{background:#100c08}
+  .meme-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s}
+  .meme.meme-img:hover img{transform:scale(1.06)}
 
   /* JANUSZ DNIA */
   .daily-box{max-width:760px;margin:0 auto;background:linear-gradient(135deg,var(--card),var(--bg2));border:2px solid var(--gold);border-radius:28px;padding:44px 34px;text-align:center;box-shadow:0 24px 60px rgba(246,196,69,.16);position:relative;overflow:hidden}
@@ -379,12 +382,9 @@ const I18N = {
     tok4_lbl:`Launch przez launchpad`, tok4_small:`Każdy Janusz startuje z tej samej linii. Bez preminta dla kolesi.`,
     gal_tag:`Święta januszowa`, gal_h2:`Galeria <span class="grad">memów</span>`, gal_p:`Zbiór świętości. Wydrukuj, opraw w ramkę, powieś nad grillem.`,
     memes:[
-      {e:`🩴`, cap:`Skarpety w sandałach = klimatyzacja stóp`},
-      {e:`🧾`, cap:`Poproszę na firmę`},
-      {e:`🔥`, cap:`Grill w środę? A czemu nie`},
-      {e:`🚗`, cap:`Maluch to nie auto, to filozofia`},
-      {e:`💶`, cap:`A można taniej?`},
-      {e:`🏖️`, cap:`Zanzibar. Służbowo.`}
+      {img:`1.png`, cap:`Skarpety w sandałach = klimatyzacja stóp`},
+      {img:`2.png`, cap:`Janusz negocjacji: a można taniej?`},
+      {img:`3.png`, cap:`Janusz oszczędzania: kup 3, zapłać za 2`}
     ],
     daily_tag:`Codzienna dawka`, daily_h2:`Janusz <span class="grad">Dnia</span>`,
     daily_p:`Każdego dnia jeden Janusz przechodzi do legendy. Kliknij i poznaj dzisiejszego bohatera.`,
@@ -433,12 +433,9 @@ const I18N = {
     tok4_lbl:`Fair launchpad launch`, tok4_small:`Every Janusz starts from the same line. No premint for buddies.`,
     gal_tag:`Sacred relics`, gal_h2:`Meme <span class="grad">gallery</span>`, gal_p:`A collection of holy artifacts. Print, frame, hang it above the grill.`,
     memes:[
-      {e:`🩴`, cap:`Socks in sandals = foot air-conditioning`},
-      {e:`🧾`, cap:`Put it on the company, please`},
-      {e:`🔥`, cap:`Grilling on a Wednesday? Why not`},
-      {e:`🚗`, cap:`The tiny Fiat isn't a car, it's a philosophy`},
-      {e:`💶`, cap:`Can it be cheaper?`},
-      {e:`🏖️`, cap:`Zanzibar. On business.`}
+      {img:`4.png`, cap:`I don't need a plan — I have Janusz`},
+      {img:`5.png`, cap:`Socks in sandals = foot air conditioning`},
+      {img:`6.png`, cap:`Janusz business: can you do it cheaper?`}
     ],
     daily_tag:`Daily dose`, daily_h2:`Janusz of the <span class="grad">Day</span>`,
     daily_p:`Every day one Janusz becomes a legend. Click and meet today's hero.`,
@@ -487,12 +484,9 @@ const I18N = {
     tok4_lbl:`Честный запуск`, tok4_small:`Каждый Януш стартует с одной линии. Без преминта для своих.`,
     gal_tag:`Святыни`, gal_h2:`Галерея <span class="grad">мемов</span>`, gal_p:`Коллекция святынь. Распечатай, вставь в рамку, повесь над мангалом.`,
     memes:[
-      {e:`🩴`, cap:`Носки в сандалиях = кондиционер для ног`},
-      {e:`🧾`, cap:`Оформите на фирму, пожалуйста`},
-      {e:`🔥`, cap:`Шашлык в среду? А почему нет`},
-      {e:`🚗`, cap:`«Копейка» — не машина, а философия`},
-      {e:`💶`, cap:`А подешевле можно?`},
-      {e:`🏖️`, cap:`Занзибар. По работе.`}
+      {img:`7.png`, cap:`Мне не нужен план — у меня есть Януш`},
+      {img:`8.png`, cap:`Носки в сандалиях = кондиционер для ног`},
+      {img:`9.png`, cap:`Януш бизнеса: а можно дешевле?`}
     ],
     daily_tag:`Ежедневная доза`, daily_h2:`Януш <span class="grad">дня</span>`,
     daily_p:`Каждый день один Януш становится легендой. Жми и узнай сегодняшнего героя.`,
@@ -532,7 +526,9 @@ let currentLang = localStorage.getItem('janusz_lang') || 'pl';
 let lastDaily = -1;
 
 function renderMemes(l){
-  memeGrid.innerHTML = I18N[l].memes.map(m=>`<div class="meme"><span class="emoji">${m.e}</span><div class="cap">${m.cap}</div></div>`).join('');
+  memeGrid.innerHTML = I18N[l].memes.map(m=> m.img
+    ? `<div class="meme meme-img"><img src="${m.img}" alt="${(m.cap||'').replace(/"/g,'&quot;')}" loading="lazy"></div>`
+    : `<div class="meme"><span class="emoji">${m.e}</span><div class="cap">${m.cap}</div></div>`).join('');
 }
 function drawDaily(){
   const arr = I18N[currentLang].daily;
